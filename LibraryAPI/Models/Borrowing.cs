@@ -11,11 +11,9 @@ namespace LibraryAPI.Models
     {
         public int Id { get; set; }
         [Required]
-        public string ClientId { get; set; }
+        public User Client { get; set; }
         [Required]
-        public string BorrowerId { get; set; }
-        [Required]
-        [ForeignKey("Book")]
+        public User Borrower { get; set; }
         public int BookId { get; set; }
         [Required]
         public DateTime Date { get; set; }

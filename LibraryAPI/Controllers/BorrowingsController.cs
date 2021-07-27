@@ -21,14 +21,14 @@ namespace LibraryAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Borrowings
+        // GET: api/Borrowing
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Borrowing>>> GetBorrowing()
         {
             return await _context.Borrowing.ToListAsync();
         }
 
-        // GET: api/Borrowings/5
+        // GET: api/Borrowing/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Borrowing>> GetBorrowing(int id)
         {
@@ -42,7 +42,7 @@ namespace LibraryAPI.Controllers
             return borrowing;
         }
 
-        // PUT: api/Borrowings/5
+        // PUT: api/Borrowing/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBorrowing(int id, Borrowing borrowing)
@@ -73,7 +73,7 @@ namespace LibraryAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Borrowings
+        // POST: api/Borrowing
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Borrowing>> PostBorrowing(Borrowing borrowing)
@@ -84,7 +84,7 @@ namespace LibraryAPI.Controllers
             return CreatedAtAction("GetBorrowing", new { id = borrowing.Id }, borrowing);
         }
 
-        // DELETE: api/Borrowings/5
+        // DELETE: api/Borrowing/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBorrowing(int id)
         {

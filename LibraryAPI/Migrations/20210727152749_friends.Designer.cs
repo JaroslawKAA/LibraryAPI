@@ -4,14 +4,16 @@ using LibraryAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LibraryAPI.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    partial class LibraryContextModelSnapshot : ModelSnapshot
+    [Migration("20210727152749_friends")]
+    partial class friends
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,7 +96,7 @@ namespace LibraryAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BookId")
+                    b.Property<int?>("BookId")
                         .HasColumnType("int");
 
                     b.Property<string>("BorrowerId")
@@ -111,6 +113,8 @@ namespace LibraryAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BookId");
+
                     b.HasIndex("BorrowerId");
 
                     b.HasIndex("ClientId");
@@ -120,18 +124,11 @@ namespace LibraryAPI.Migrations
 
             modelBuilder.Entity("LibraryAPI.Models.Friends", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<string>("FriendId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
 
                     b.ToTable("Friends");
                 });
@@ -215,6 +212,10 @@ namespace LibraryAPI.Migrations
 
             modelBuilder.Entity("LibraryAPI.Models.Borrowing", b =>
                 {
+                    b.HasOne("LibraryAPI.Models.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId");
+
                     b.HasOne("LibraryAPI.Models.User", "Borrower")
                         .WithMany()
                         .HasForeignKey("BorrowerId");
@@ -222,6 +223,8 @@ namespace LibraryAPI.Migrations
                     b.HasOne("LibraryAPI.Models.User", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId");
+
+                    b.Navigation("Book");
 
                     b.Navigation("Borrower");
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +18,8 @@ namespace LibraryAPI.Models
         [Required]
         public bool TermsAccepted { get; set; }
 
-        public List<User> Friends { get; set; } = new List<User>();
+        [NotMapped]
+        public List<User> Friends { get; set; }
         public byte[] Photo { get; set; }
     }
 }

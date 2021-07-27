@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LibraryAPI.Data;
@@ -21,14 +19,14 @@ namespace LibraryAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Books
+        // GET: api/Book
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Book>>> GetBook()
         {
             return await _context.Book.ToListAsync();
         }
 
-        // GET: api/Books/5
+        // GET: api/Book/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Book>> GetBook(int id)
         {
@@ -42,7 +40,7 @@ namespace LibraryAPI.Controllers
             return book;
         }
 
-        // PUT: api/Books/5
+        // PUT: api/Book/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBook(int id, Book book)
@@ -73,7 +71,7 @@ namespace LibraryAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Books
+        // POST: api/Book
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Book>> PostBook(Book book)
@@ -84,7 +82,7 @@ namespace LibraryAPI.Controllers
             return CreatedAtAction("GetBook", new { id = book.Id }, book);
         }
 
-        // DELETE: api/Books/5
+        // DELETE: api/Book/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {

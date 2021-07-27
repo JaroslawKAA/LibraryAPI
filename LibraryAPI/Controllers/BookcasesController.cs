@@ -21,14 +21,14 @@ namespace LibraryAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Bookcases
+        // GET: api/Bookcase
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Bookcase>>> GetBookcase()
         {
             return await _context.Bookcase.ToListAsync();
         }
 
-        // GET: api/Bookcases/5
+        // GET: api/Bookcase/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Bookcase>> GetBookcase(int id)
         {
@@ -42,7 +42,7 @@ namespace LibraryAPI.Controllers
             return bookcase;
         }
 
-        // PUT: api/Bookcases/5
+        // PUT: api/Bookcase/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBookcase(int id, Bookcase bookcase)
@@ -73,7 +73,7 @@ namespace LibraryAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Bookcases
+        // POST: api/Bookcase
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Bookcase>> PostBookcase(Bookcase bookcase)
@@ -84,7 +84,7 @@ namespace LibraryAPI.Controllers
             return CreatedAtAction("GetBookcase", new { id = bookcase.Id }, bookcase);
         }
 
-        // DELETE: api/Bookcases/5
+        // DELETE: api/Bookcase/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBookcase(int id)
         {

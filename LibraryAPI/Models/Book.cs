@@ -19,7 +19,7 @@ namespace LibraryAPI.Models
         public DateTime PublishingYear { get; set; }
         [Required]
         [ForeignKey("User")]
-        public string OwnerId { get; set; }
+        public User Owner { get; set; }
         [Required]
         public bool Read { get; set; }
         [Required]

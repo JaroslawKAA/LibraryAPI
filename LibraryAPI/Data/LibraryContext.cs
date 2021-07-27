@@ -14,14 +14,15 @@ namespace LibraryAPI.Data
         {
         }
 
-        public DbSet<LibraryAPI.Models.Book> Book { get; set; }
+        public DbSet<Book> Book { get; set; }
 
-        public DbSet<LibraryAPI.Models.Bookcase> Bookcase { get; set; }
+        public DbSet<Bookcase> Bookcase { get; set; }
 
-        public DbSet<LibraryAPI.Models.User> User { get; set; }
+        public DbSet<User> User { get; set; }
 
-        public DbSet<LibraryAPI.Models.Borrowing> Borrowing { get; set; }
+        public DbSet<Borrowing> Borrowing { get; set; }
 
+        public DbSet<Friends> Friends { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);

@@ -351,3 +351,5 @@ MigrationBackup/
 
 .vs
 LibraryAPI\obj
+LibraryAPI\obj\LibraryAPI.csproj.nuget.dgspec.json
+LibraryAPI\obj\project.nuget.cache
