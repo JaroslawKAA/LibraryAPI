@@ -350,6 +350,10 @@ MigrationBackup/
 .ionide/
 
 .vs
-LibraryAPI\obj
+*.cache
+LibraryAPI/obj/LibraryAPI.csproj.nuget.dgspec.json
+*.props
+LibraryAPI/obj/project.assets.json
+.vsLibraryAPI\obj
 LibraryAPI\obj\LibraryAPI.csproj.nuget.dgspec.json
 LibraryAPI\obj\project.nuget.cache
