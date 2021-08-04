@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LibraryAPI.Data;
@@ -25,7 +23,10 @@ namespace LibraryAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Borrowing>>> GetBorrowing()
         {
-            return await _context.Borrowing.ToListAsync();
+            return await _context.Borrowing
+                .Include(b => b.Borrower)
+                .Include(b => b.Client)
+                .ToListAsync();
         }
 
         // GET: api/Borrowing/5
@@ -33,12 +34,15 @@ namespace LibraryAPI.Controllers
         public async Task<ActionResult<Borrowing>> GetBorrowing(int id)
         {
             var borrowing = await _context.Borrowing.FindAsync(id);
-
+           
             if (borrowing == null)
             {
                 return NotFound();
             }
 
+            _context.Entry(borrowing).Reference(b => b.Borrower).Load();
+            _context.Entry(borrowing).Reference(b => b.Client).Load();
+            
             return borrowing;
         }
 
