@@ -31,7 +31,8 @@ namespace LibraryAPI.Controllers
         public async Task<ActionResult<IEnumerable<Friends>>> GetFriends(string userId)
         {
             var friends = await _context.Friends
-                                            .Where(f => f.UserId == userId)
+                                            .Where(f => f.UserId == userId ||
+                                                        f.FriendId == userId)
                                             .ToListAsync();
 
             if (friends == null || friends.Count == 0)
