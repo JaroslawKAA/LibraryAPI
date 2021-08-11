@@ -19,20 +19,21 @@ namespace LibraryAPI.Controllers
             _context = context;
         }
 
-        // GET: api/User
+        // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUser()
         {
-            return await _context.User
-                .Include(u => u.Friends)
+            var result = await _context.User
                 .ToListAsync();
+
+            return result;
         }
 
-        // GET: api/User/5
+        // GET: api/Users/guid-dsad24-...
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(string id)
         {
-            var user = await _context.User.FindAsync(id);
+            var user = await _context.User.FirstOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
             {
@@ -95,7 +96,7 @@ namespace LibraryAPI.Controllers
                 }
             }
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return CreatedAtAction("GetUser", new {id = user.Id}, user);
         }
 
         // DELETE: api/User/5

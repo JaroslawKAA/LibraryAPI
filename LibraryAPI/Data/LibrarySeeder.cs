@@ -17,7 +17,7 @@ namespace LibraryAPI.Data
             _context = context;
             _admin = new User()
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = "ab7f43cb-2eb6-480d-ad1f-0406421b699b",
                 Email = "admin",
                 // Password = admin
                 PasswordHash = "$2a$11$3C0BAwSbIIGYT8wiYt2xauRoyhCJMPC9SknVBW5JcAjOTN47oDfgS",
@@ -77,7 +77,7 @@ namespace LibraryAPI.Data
                 _admin,
                 new User()
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = "bcc79cc5-3aef-4e2a-b41b-f34dd5d36afd",
                     UserName = "Janek",
                     Email = "Email",
                     PasswordHash = "$2a$11$3C0BAwSbIIGYT8wiYt2xauRoyhCJMPC9SknVBW5JcAjOTN47oDfgS",
@@ -85,7 +85,7 @@ namespace LibraryAPI.Data
                 },
                 new User()
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = "1e138a90-60bb-4021-b8df-6dd1cc3bd7b2",
                     UserName = "Brian",
                     Email = "Email2",
                     PasswordHash = "$2a$11$3C0BAwSbIIGYT8wiYt2xauRoyhCJMPC9SknVBW5JcAjOTN47oDfgS",
@@ -93,7 +93,7 @@ namespace LibraryAPI.Data
                 },
                 new User()
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = "1e232a90-60bb-3597-b8df-6dd1cc2bd7b2",
                     UserName = "Pep",
                     Email = "Email3",
                     PasswordHash = "$2a$11$3C0BAwSbIIGYT8wiYt2xauRoyhCJMPC9SknVBW5JcAjOTN47oDfgS",

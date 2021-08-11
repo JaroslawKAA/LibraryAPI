@@ -88,6 +88,20 @@ namespace LibraryAPI.Controllers
             return CreatedAtAction("GetBook", new { id = book.Id }, book);
         }
 
+        // POST: api/Book
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Book>> PostBook(IEnumerable<Book> books)
+        {
+            foreach (Book b in books)
+            {
+                _context.Book.Add(b);
+            }
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetBook", books);
+        }
+
         // DELETE: api/Book/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
