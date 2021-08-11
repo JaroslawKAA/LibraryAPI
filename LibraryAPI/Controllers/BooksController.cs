@@ -46,9 +46,9 @@ namespace LibraryAPI.Controllers
             return book;
         }
 
-        [HttpGet("GetBooksByUserId/{Userid}")]
-        [ActionName("GetBooksByUserId")]
-        public async Task<ActionResult<List<Book>>> GetBooksByUserId(string Userid)
+        [HttpGet("ByUserId/{Userid}")]
+        // [ActionName("GetBooksByUserId")]
+        public async Task<ActionResult<List<Book>>> GetBook(string Userid)
         {
             var book = await _context.Book.Where(x => x.Owner.Id == Userid).ToListAsync();
 
@@ -60,11 +60,15 @@ namespace LibraryAPI.Controllers
             return book;
         }
 
-        [HttpGet("GetBooksByUserIdWithLimits/{Userid}/{limit}")]
-        [ActionName("GetBooksByUserIdWithLimits")]
-        public async Task<ActionResult<List<Book>>> GetBooksByUserIdWithLimits(string Userid, int limit)
+        [HttpGet("ByUserId/{Userid}/{limit}")]
+        // [ActionName("GetBooksByUserIdWithLimits")]
+        public async Task<ActionResult<List<Book>>> GetBook(string UserId, int limit)
         {
-            var book = await _context.Book.Where(x => x.Owner.Id == Userid).OrderBy(x=>x.Title).Take(limit).ToListAsync();
+            var book = await _context.Book
+                .Where(x => x.Owner.Id == UserId)
+                .OrderBy(x=>x.Title)
+                .Take(limit)
+                .ToListAsync();
 
             if (book == null)
             {

@@ -49,8 +49,8 @@ namespace LibraryAPI.Controllers
         /// </summary>
         /// <param name="email"></param>
         /// <returns>User</returns>
-        [HttpGet("GetUserByEmail/{email}")]
-        [ActionName("GetUserByEmail")]
+        [HttpGet("ByEmail/{email}")]
+        // [ActionName("GetUserByEmail")]
         public async Task<ActionResult<User>> GetUserByEmail(string email)
         {
             var user = await _context.User.Where(x => x.Email == email).SingleOrDefaultAsync();
