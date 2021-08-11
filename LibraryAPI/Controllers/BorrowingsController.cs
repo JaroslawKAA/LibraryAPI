@@ -46,6 +46,35 @@ namespace LibraryAPI.Controllers
             return borrowing;
         }
 
+        [HttpGet("GetBorrowingsByEmailWithAmount/{email}/{amount}")]
+        [ActionName("GetBorrowingsByEmailWithAmount")]
+        public async Task<ActionResult<List<Borrowing>>> GetBorrowingsByEmailWithAmount(string email, int amount)
+        {
+            var borrowing = await _context.Borrowing.Where(x => x.Borrower.Email == email || x.Client.Email == email).OrderBy(x=>x.ReturnDate).Take(amount).ToListAsync();
+            
+            if (borrowing == null)
+            {
+                return NotFound();
+            }
+
+            return borrowing;
+        }
+
+
+        [HttpGet("GetBorrowingsByEmail/{email}")]
+        [ActionName("GetBorrowingsByEmail")]
+        public async Task<ActionResult<List<Borrowing>>> GetAllBorrowingsByEmail(string email)
+        {
+            var borrowing = await _context.Borrowing.Where(x => x.Borrower.Email == email|| x.Client.Email == email).ToListAsync();
+
+            if (borrowing == null)
+            {
+                return NotFound();
+            }
+
+            return borrowing;
+        }
+
         // PUT: api/Borrowing/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

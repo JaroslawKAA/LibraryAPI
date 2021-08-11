@@ -46,6 +46,35 @@ namespace LibraryAPI.Controllers
             return book;
         }
 
+        [HttpGet("GetBooksByUserId/{Userid}")]
+        [ActionName("GetBooksByUserId")]
+        public async Task<ActionResult<List<Book>>> GetBooksByUserId(string Userid)
+        {
+            var book = await _context.Book.Where(x => x.Owner.Id == Userid).ToListAsync();
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            return book;
+        }
+
+        [HttpGet("GetBooksByUserIdWithLimits/{Userid}/{limit}")]
+        [ActionName("GetBooksByUserIdWithLimits")]
+        public async Task<ActionResult<List<Book>>> GetBooksByUserIdWithLimits(string Userid, int limit)
+        {
+            var book = await _context.Book.Where(x => x.Owner.Id == Userid).OrderBy(x=>x.Title).Take(limit).ToListAsync();
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            return book;
+        }
+
+
         // PUT: api/Book/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

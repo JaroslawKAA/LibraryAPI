@@ -43,6 +43,27 @@ namespace LibraryAPI.Controllers
             return user;
         }
 
+
+        /// <summary>
+        /// return user by email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>User</returns>
+        [HttpGet("GetUserByEmail/{email}")]
+        [ActionName("GetUserByEmail")]
+        public async Task<ActionResult<User>> GetUserByEmail(string email)
+        {
+            var user = await _context.User.Where(x => x.Email == email).SingleOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
+        }
+
+
         // PUT: api/User/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
