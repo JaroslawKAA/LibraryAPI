@@ -33,8 +33,17 @@ namespace LibraryAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Borrowing>> GetBorrowing(int id)
         {
-            var borrowing = await _context.Borrowing.FindAsync(id);
-           
+            var borrowing = await _context.Borrowing
+                .FindAsync(id);
+
+            _context.Entry(borrowing)
+                .Reference(b => b.Borrower)
+                .Load();
+
+            _context.Entry(borrowing)
+                .Reference(b => b.Client)
+                .Load();
+
             if (borrowing == null)
             {
                 return NotFound();
@@ -51,6 +60,8 @@ namespace LibraryAPI.Controllers
         public async Task<ActionResult<List<Borrowing>>> GetBorrowing(string email, int amount)
         {
             var borrowing = await _context.Borrowing
+                .Include(b => b.Borrower)
+                .Include(b => b.Client)
                 .Where(x => x.Borrower.Email == email || x.Client.Email == email)
                 .OrderBy(x=>x.ReturnDate)
                 .Take(amount)
@@ -70,6 +81,8 @@ namespace LibraryAPI.Controllers
         public async Task<ActionResult<List<Borrowing>>> GetAllBorrowing(string email)
         {
             var borrowing = await _context.Borrowing
+                .Include(b => b.Borrower)
+                .Include(b => b.Client)
                 .Where(x => x.Borrower.Email == email|| x.Client.Email == email)
                 .ToListAsync();
 

@@ -1,18 +1,14 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using LibraryAPI.Data;
+using LibraryAPI.Middleware;
+using Serilog;
+using Serilog.Events;
 
 namespace LibraryAPI
 {
@@ -39,6 +35,7 @@ namespace LibraryAPI
             services.AddDbContext<LibraryContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("LibraryContext")));
             services.AddScoped<LibrarySeeder>();
+            services.AddScoped<ErrorHandlingMiddleware>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,7 +53,13 @@ namespace LibraryAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LibraryAPI v1"));
             }
+            else
+            {
+                app.UseExceptionHandler("Home/Error");
+            }
 
+            app.UseSerilogRequestLogging();
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
