@@ -60,20 +60,6 @@ namespace LibraryAPI.Controllers
             return book;
         }
 
-        [HttpGet("ByUserId/{Userid}/Count")]
-        // [ActionName("GetBooksByUserId")]
-        public async Task<ActionResult<int>> GetBooksCount(string Userid)
-        {
-            var books = await _context.Book.Where(x => x.Owner.Id == Userid).ToListAsync();
-
-            if (books == null)
-            {
-                return NotFound();
-            }
-
-            return books.Count;
-        }
-
         [HttpGet("ByUserId/{Userid}/{limit}")]
         // [ActionName("GetBooksByUserIdWithLimits")]
         public async Task<ActionResult<List<Book>>> GetBook(string UserId, int limit)
