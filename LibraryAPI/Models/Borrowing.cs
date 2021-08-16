@@ -11,9 +11,12 @@ namespace LibraryAPI.Models
     {
         public int Id { get; set; }
         [Required]
-        public User Client { get; set; }
+        public string ClientId { get; set; }
+        [NotMapped] public User Client { get; set; }
         [Required]
-        public User Borrower { get; set; }
+        public string BorrowerId { get; set; }
+        [NotMapped] public User Borrower { get; set; }
+        [NotMapped] public string BookTitle { get; set; }
         public int BookId { get; set; }
         [Required]
         public DateTime Date { get; set; }

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryAPI.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20210723121237_addborrowings")]
-    partial class addborrowings
+    [Migration("20210816131101_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,22 +29,26 @@ namespace LibraryAPI.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Authors")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("Available")
                         .HasColumnType("bit");
 
                     b.Property<string>("BarcodeNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
-                    b.Property<int?>("BookcaseId")
+                    b.Property<int>("BookcaseId")
                         .HasColumnType("int");
 
                     b.Property<int>("Category")
                         .HasColumnType("int");
 
                     b.Property<string>("OwnerId")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Photo")
                         .HasColumnType("varbinary(max)");
@@ -56,16 +60,14 @@ namespace LibraryAPI.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<int>("Votes")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookcaseId");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("Book");
                 });
@@ -96,10 +98,12 @@ namespace LibraryAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("BorrowerId")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClientId")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -109,11 +113,25 @@ namespace LibraryAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BorrowerId");
-
-                    b.HasIndex("ClientId");
-
                     b.ToTable("Borrowing");
+                });
+
+            modelBuilder.Entity("LibraryAPI.Models.Friends", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FriendId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Friends");
                 });
 
             modelBuilder.Entity("LibraryAPI.Models.User", b =>
@@ -137,7 +155,9 @@ namespace LibraryAPI.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Localization")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -172,59 +192,12 @@ namespace LibraryAPI.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("LibraryAPI.Models.Book", b =>
-                {
-                    b.HasOne("LibraryAPI.Models.Bookcase", "Bookcase")
-                        .WithMany()
-                        .HasForeignKey("BookcaseId");
-
-                    b.HasOne("LibraryAPI.Models.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
-
-                    b.Navigation("Bookcase");
-
-                    b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("LibraryAPI.Models.Borrowing", b =>
-                {
-                    b.HasOne("LibraryAPI.Models.User", "Borrower")
-                        .WithMany()
-                        .HasForeignKey("BorrowerId");
-
-                    b.HasOne("LibraryAPI.Models.User", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId");
-
-                    b.Navigation("Borrower");
-
-                    b.Navigation("Client");
-                });
-
-            modelBuilder.Entity("LibraryAPI.Models.User", b =>
-                {
-                    b.HasOne("LibraryAPI.Models.User", null)
-                        .WithMany("Friends")
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("LibraryAPI.Models.User", b =>
-                {
-                    b.Navigation("Friends");
                 });
 #pragma warning restore 612, 618
         }

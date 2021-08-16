@@ -44,6 +44,10 @@ namespace LibraryAPI.Migrations
                     b.Property<int>("Category")
                         .HasColumnType("int");
 
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<byte[]>("Photo")
                         .HasColumnType("varbinary(max)");
 
@@ -58,16 +62,10 @@ namespace LibraryAPI.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("User")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("Votes")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("User");
 
                     b.ToTable("Book");
                 });
@@ -98,10 +96,12 @@ namespace LibraryAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("BorrowerId")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClientId")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -110,10 +110,6 @@ namespace LibraryAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BorrowerId");
-
-                    b.HasIndex("ClientId");
 
                     b.ToTable("Borrowing");
                 });
@@ -200,32 +196,6 @@ namespace LibraryAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("LibraryAPI.Models.Book", b =>
-                {
-                    b.HasOne("LibraryAPI.Models.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("User")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("LibraryAPI.Models.Borrowing", b =>
-                {
-                    b.HasOne("LibraryAPI.Models.User", "Borrower")
-                        .WithMany()
-                        .HasForeignKey("BorrowerId");
-
-                    b.HasOne("LibraryAPI.Models.User", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId");
-
-                    b.Navigation("Borrower");
-
-                    b.Navigation("Client");
                 });
 #pragma warning restore 612, 618
         }

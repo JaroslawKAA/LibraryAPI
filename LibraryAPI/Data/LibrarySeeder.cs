@@ -131,24 +131,24 @@ namespace LibraryAPI.Data
                 new Borrowing()
                 {
                     BookId = 5,
-                    Borrower = _admin,
-                    Client = _usersList.ToList()[0],
+                    BorrowerId = _admin.Id,
+                    ClientId = _usersList.ToList()[0].Id,
                     Date = new DateTime(2021, 5, 4),
                     ReturnDate = new DateTime(2021, 9, 3),
                 },
                 new Borrowing()
                 {
                     BookId = 4,
-                    Borrower = _admin,
-                    Client = _usersList.ToList()[1],
+                    BorrowerId = _admin.Id,
+                    ClientId = _usersList.ToList()[1].Id,
                     Date = new DateTime(2021, 5, 2),
                     ReturnDate = new DateTime(2021, 10, 21),
                 },
                 new Borrowing()
                 {
                     BookId = 3,
-                    Borrower = _admin,
-                    Client = _usersList.ToList()[2],
+                    BorrowerId = _admin.Id,
+                    ClientId = _usersList.ToList()[2].Id,
                     Date = new DateTime(2021, 5, 1),
                     ReturnDate = new DateTime(2021, 8, 12),
                 }
@@ -178,7 +178,7 @@ namespace LibraryAPI.Data
                 PublishingYear = new DateTime(2020, 1, 1),
                 Read = true,
                 Available = false,
-                Owner = _admin,
+                OwnerId = _admin.Id,
                 Category = Category.Crime
             });
             books.Add(new Book()
@@ -189,7 +189,7 @@ namespace LibraryAPI.Data
                 PublishingYear = new DateTime(2020, 1, 1),
                 Available = true,
                 Read = true,
-                Owner = _admin,
+                OwnerId = _admin.Id,
                 Category = Category.Novel
             });
             books.Add(new Book()
@@ -200,7 +200,7 @@ namespace LibraryAPI.Data
                 PublishingYear = new DateTime(2020, 1, 1),
                 Available = true,
                 Read = false,
-                Owner = _admin,
+                OwnerId = _admin.Id,
                 Category = Category.Documentary
             });
             books.Add(new Book()
@@ -211,7 +211,7 @@ namespace LibraryAPI.Data
                 PublishingYear = new DateTime(2020, 1, 1),
                 Read = true,
                 Available = false,
-                Owner = _admin,
+                OwnerId = _admin.Id,
                 Category = Category.Crime
             });
             books.Add(new Book()
@@ -222,7 +222,7 @@ namespace LibraryAPI.Data
                 PublishingYear = new DateTime(2020, 1, 1),
                 Available = true,
                 Read = true,
-                Owner = _admin,
+                OwnerId = _admin.Id,
                 Category = Category.Novel
             });
             books.Add(new Book()
@@ -233,7 +233,7 @@ namespace LibraryAPI.Data
                 PublishingYear = new DateTime(2020, 1, 1),
                 Available = true,
                 Read = false,
-                Owner = _admin,
+                OwnerId = _admin.Id,
                 Category = Category.Documentary
             });
 

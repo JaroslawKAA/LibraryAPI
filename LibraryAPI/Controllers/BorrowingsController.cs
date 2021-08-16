@@ -23,10 +23,17 @@ namespace LibraryAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Borrowing>>> GetBorrowing()
         {
-            return await _context.Borrowing
-                .Include(b => b.Borrower)
-                .Include(b => b.Client)
+            var result = await _context.Borrowing
                 .ToListAsync();
+
+            foreach (Borrowing borrowing in result)
+            {
+                borrowing.Client = _context.User.FirstOrDefault(b => b.Id == borrowing.ClientId);
+                borrowing.Borrower = _context.User.FirstOrDefault(u => u.Id == borrowing.BorrowerId);
+                borrowing.BookTitle = _context.Book.FirstOrDefault(b => b.Id == borrowing.BookId)?.Title;
+            }
+
+            return result;
         }
 
         // GET: api/Borrowing/5
@@ -34,51 +41,57 @@ namespace LibraryAPI.Controllers
         public async Task<ActionResult<Borrowing>> GetBorrowing(int id)
         {
             var borrowing = await _context.Borrowing.FindAsync(id);
-           
-            if (borrowing == null)
-            {
-                return NotFound();
-            }
 
-            _context.Entry(borrowing).Reference(b => b.Borrower).Load();
-            _context.Entry(borrowing).Reference(b => b.Client).Load();
-            
+            if (borrowing == null)
+                return NotFound();
+
+            borrowing.Client = _context.User.FirstOrDefault(b => b.Id == borrowing.ClientId);
+            borrowing.Borrower = _context.User.FirstOrDefault(u => u.Id == borrowing.BorrowerId);
+            borrowing.BookTitle = _context.Book.FirstOrDefault(b => b.Id == borrowing.BookId)?.Title;
+
             return borrowing;
         }
 
-        [HttpGet("ByEmail/{email}/{amount}")]
-        // [ActionName("GetBorrowingsByEmailWithAmount")]
-        public async Task<ActionResult<List<Borrowing>>> GetBorrowing(string email, int amount)
+        [HttpGet("ByOwnerId/{ownerId}")]
+        public async Task<ActionResult<List<Borrowing>>> GetAllBorrowing(string ownerId)
         {
-            var borrowing = await _context.Borrowing
-                .Where(x => x.Borrower.Email == email || x.Client.Email == email)
-                .OrderBy(x=>x.ReturnDate)
+            var borrowings = await _context.Borrowing
+                .Where(x => x.BorrowerId == ownerId || x.ClientId == ownerId)
+                .ToListAsync();
+
+            if (borrowings == null)
+                return NotFound();
+
+            foreach (Borrowing borrowing in borrowings)
+            {
+                borrowing.Client = _context.User.FirstOrDefault(b => b.Id == borrowing.ClientId);
+                borrowing.Borrower = _context.User.FirstOrDefault(u => u.Id == borrowing.BorrowerId);
+                borrowing.BookTitle = _context.Book.FirstOrDefault(b => b.Id == borrowing.BookId)?.Title;
+            }
+
+            return borrowings;
+        }
+
+        [HttpGet("ByOwnerId/{ownerId}/{amount}")]
+        public async Task<ActionResult<List<Borrowing>>> GetBorrowing(string ownerId, int amount)
+        {
+            var borrowings = await _context.Borrowing
+                .Where(x => x.BorrowerId == ownerId || x.ClientId == ownerId)
+                .OrderBy(x => x.ReturnDate)
                 .Take(amount)
                 .ToListAsync();
-            
-            if (borrowing == null)
-            {
+
+            if (borrowings == null)
                 return NotFound();
+
+            foreach (Borrowing borrowing in borrowings)
+            {
+                borrowing.Client = _context.User.FirstOrDefault(b => b.Id == borrowing.ClientId);
+                borrowing.Borrower = _context.User.FirstOrDefault(u => u.Id == borrowing.BorrowerId);
+                borrowing.BookTitle = _context.Book.FirstOrDefault(b => b.Id == borrowing.BookId)?.Title;
             }
 
-            return borrowing;
-        }
-
-
-        [HttpGet("ByEmail/{email}")]
-        // [ActionName("GetBorrowingsByEmail")]
-        public async Task<ActionResult<List<Borrowing>>> GetAllBorrowing(string email)
-        {
-            var borrowing = await _context.Borrowing
-                .Where(x => x.Borrower.Email == email|| x.Client.Email == email)
-                .ToListAsync();
-
-            if (borrowing == null)
-            {
-                return NotFound();
-            }
-
-            return borrowing;
+            return borrowings;
         }
 
         // PUT: api/Borrowing/5
@@ -120,7 +133,7 @@ namespace LibraryAPI.Controllers
             _context.Borrowing.Add(borrowing);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBorrowing", new { id = borrowing.Id }, borrowing);
+            return CreatedAtAction("GetBorrowing", new {id = borrowing.Id}, borrowing);
         }
 
         // DELETE: api/Borrowing/5

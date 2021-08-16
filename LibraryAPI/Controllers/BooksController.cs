@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LibraryAPI.Data;
 using LibraryAPI.Models;
+using Serilog;
 
 namespace LibraryAPI.Controllers
 {
@@ -19,14 +21,22 @@ namespace LibraryAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Book
+        // GET: api/Books
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Book>>> GetBook()
         {
-            return await _context
+            var result = await _context
                 .Book
-                .Include(b => b.Owner)
+                // .Include(b => b.Owner)
                 .ToListAsync();
+
+            foreach (var book in result)
+            {
+                book.Owner = _context.User
+                    .FirstOrDefault(u => u.Id == book.OwnerId);
+            }
+
+            return result;
         }
 
         // GET: api/Book/5
@@ -36,48 +46,61 @@ namespace LibraryAPI.Controllers
             var book = await _context.Book
                 .FindAsync(id);
 
-            _context.Entry(book).Reference(b => b.Owner).Load();
-
             if (book == null)
-            {
                 return NotFound();
-            }
+
+            book.Owner = _context.User
+                .FirstOrDefault(u => u.Id == book.OwnerId);
 
             return book;
         }
 
-        [HttpGet("ByUserId/{Userid}")]
-        // [ActionName("GetBooksByUserId")]
-        public async Task<ActionResult<List<Book>>> GetBook(string Userid)
+        [HttpGet("ByUserId/{userId}")]
+        public async Task<ActionResult<List<Book>>> GetBook(string userId)
         {
-            var book = await _context.Book.Where(x => x.Owner.Id == Userid).ToListAsync();
+            var books = await _context.Book.Where(x => x.OwnerId == userId).ToListAsync();
 
-            if (book == null)
-            {
+            if (books == null)
                 return NotFound();
-            }
 
-            return book;
+            var owner = _context.User
+                .FirstOrDefault(u => u.Id == userId);
+
+            foreach (var book in books)
+                book.Owner = owner;
+
+            return books;
         }
 
-        [HttpGet("ByUserId/{Userid}/{limit}")]
-        // [ActionName("GetBooksByUserIdWithLimits")]
-        public async Task<ActionResult<List<Book>>> GetBook(string UserId, int limit)
+        [HttpGet("ByUserId/{userId}/{limit}")]
+        public async Task<ActionResult<List<Book>>> GetBook(string userId, int limit)
         {
-            var book = await _context.Book
-                .Where(x => x.Owner.Id == UserId)
+            var books = await _context.Book
+                .Where(x => x.OwnerId == userId)
                 .OrderBy(x=>x.Title)
                 .Take(limit)
                 .ToListAsync();
-
-            if (book == null)
-            {
+            
+            if (books == null)
                 return NotFound();
-            }
 
-            return book;
+            var owner = _context.User
+                .FirstOrDefault(u => u.Id == userId);
+
+            foreach (var book in books)
+                book.Owner = owner;
+
+            return books;
         }
 
+        [HttpGet("ByUserId/{userId}/Count")]
+        public async Task<int> GetBooksCount(string userId)
+        {
+            var count = _context.Book
+                .Count(x => x.OwnerId == userId);
+
+            return count;
+        }
 
         // PUT: api/Book/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -115,26 +138,19 @@ namespace LibraryAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Book>> PostBook(Book book)
         {
-            _context.Book.Add(book);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Book.Add(book);
 
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error: " + e.Message);
+            }
             return CreatedAtAction("GetBook", new { id = book.Id }, book);
         }
-
-        // // POST: api/Book
-        // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // [HttpPost]
-        // public async Task<ActionResult<Book>> PostBook(IEnumerable<Book> books)
-        // {
-        //     foreach (Book b in books)
-        //     {
-        //         _context.Book.Add(b);
-        //     }
-        //     await _context.SaveChangesAsync();
-        //
-        //     return CreatedAtAction("GetBook", books);
-        // }
-
+        
         // DELETE: api/Book/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
