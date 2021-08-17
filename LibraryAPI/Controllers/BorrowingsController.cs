@@ -133,7 +133,7 @@ namespace LibraryAPI.Controllers
             _context.Borrowing.Add(borrowing);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBorrowing", new {id = borrowing.Id}, borrowing);
+            return CreatedAtAction("GetBorrowing", new { id = borrowing.Id }, borrowing);
         }
 
         // DELETE: api/Borrowing/5

@@ -24,5 +24,7 @@ namespace LibraryAPI.Models
         public DateTime Date { get; set; }
         [Required]
         public DateTime ReturnDate { get; set; }
+        [NotMapped]
+        public string BookTitle { get; set; }
     }
 }
