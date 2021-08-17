@@ -23,6 +23,7 @@ namespace LibraryAPI
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(config)
                 .CreateLogger();
+
             try
             {
                 Log.Information("Application Starting.");
