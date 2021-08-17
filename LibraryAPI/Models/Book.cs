@@ -17,13 +17,11 @@ namespace LibraryAPI.Models
         public string BarcodeNumber { get; set; }
         [Required]
         public DateTime PublishingYear { get; set; }
+        [Required] public DateTime AddingDate { get; set; }
         [Required]
-        public DateTime AddingDate { get; set; }
-        [Required]
-        // [ForeignKey("User")]
-        public string OwnerId { get; set; }
-        [NotMapped]
+        [ForeignKey("User")]
         public User Owner { get; set; }
+        public string OwnerId { get; set; }
         [Required]
         public bool Read { get; set; }
         [Required]
