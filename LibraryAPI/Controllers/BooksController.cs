@@ -58,7 +58,10 @@ namespace LibraryAPI.Controllers
         [HttpGet("ByUserId/{userId}")]
         public async Task<ActionResult<List<Book>>> GetBook(string userId)
         {
-            var books = await _context.Book.Where(x => x.OwnerId == userId).ToListAsync();
+            var books = await _context.Book
+                .Where(x => x.OwnerId == userId)
+                .OrderByDescending(b => b.AddingDate)
+                .ToListAsync();
 
             if (books == null)
                 return NotFound();
@@ -77,7 +80,7 @@ namespace LibraryAPI.Controllers
         {
             var books = await _context.Book
                 .Where(x => x.OwnerId == userId)
-                .OrderBy(x=>x.Title)
+                .OrderByDescending(b => b.AddingDate)
                 .Take(limit)
                 .ToListAsync();
             
