@@ -18,8 +18,7 @@ namespace LibraryAPI.Models
         [Required]
         public DateTime PublishingYear { get; set; }
         [Required] public DateTime AddingDate { get; set; }
-        [Required]
-        [ForeignKey("User")]
+        [NotMapped]
         public User Owner { get; set; }
         public string OwnerId { get; set; }
         [Required]
