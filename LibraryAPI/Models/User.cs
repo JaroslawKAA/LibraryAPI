@@ -21,5 +21,6 @@ namespace LibraryAPI.Models
         [NotMapped]
         public List<User> Friends { get; set; }
         public byte[] Photo { get; set; }
+        public int BooksCount { get; set; }
     }
 }

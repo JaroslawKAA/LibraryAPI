@@ -19,26 +19,32 @@ namespace LibraryAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Users
+        // GET: api/User
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUser()
         {
-            var result = await _context.User
-                .ToListAsync();
+            var users = await _context.User.ToListAsync();
+            foreach (User user in users)
+            {
+                var userBooksCount = _context.Book.Count(b => b.OwnerId == user.Id);
+                user.BooksCount = userBooksCount;
+            }
 
-            return result;
+            return users;
         }
 
-        // GET: api/Users/guid-dsad24-...
+        // GET: api/User/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(string id)
         {
-            var user = await _context.User.FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _context.User.FindAsync(id);
 
             if (user == null)
             {
                 return NotFound();
             }
+
+            user.BooksCount = _context.Book.Count(b => b.OwnerId == user.Id);
 
             return user;
         }
@@ -49,8 +55,8 @@ namespace LibraryAPI.Controllers
         /// </summary>
         /// <param name="email"></param>
         /// <returns>User</returns>
-        [HttpGet("ByEmail/{email}")]
-        // [ActionName("GetUserByEmail")]
+        [HttpGet("GetUserByEmail/{email}")]
+        [ActionName("GetUserByEmail")]
         public async Task<ActionResult<User>> GetUserByEmail(string email)
         {
             var user = await _context.User.Where(x => x.Email == email).SingleOrDefaultAsync();
@@ -59,6 +65,8 @@ namespace LibraryAPI.Controllers
             {
                 return NotFound();
             }
+
+            user.BooksCount = _context.Book.Count(b => b.OwnerId == user.Id);
 
             return user;
         }
@@ -117,7 +125,7 @@ namespace LibraryAPI.Controllers
                 }
             }
 
-            return CreatedAtAction("GetUser", new {id = user.Id}, user);
+            return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
 
         // DELETE: api/User/5
