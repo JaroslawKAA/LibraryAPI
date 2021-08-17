@@ -19,30 +19,29 @@ namespace LibraryAPI.Controllers
             _context = context;
         }
 
-        // GET: api/User
+        // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUser()
         {
-            var users = await _context.User.ToListAsync();
-            foreach (User user in users)
+            var result = await _context.User
+                .ToListAsync();
+
+            foreach (User user in result)
             {
-                var userBooksCount = _context.Book.Count(b => b.OwnerId == user.Id);
-                user.BooksCount = userBooksCount;
+                user.BooksCount = _context.Book.Count(b => b.OwnerId == user.Id);
             }
 
-            return users;
+            return result;
         }
 
-        // GET: api/User/5
+        // GET: api/Users/guid-dsad24-...
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(string id)
         {
-            var user = await _context.User.FindAsync(id);
+            var user = await _context.User.FirstOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
-            {
                 return NotFound();
-            }
 
             user.BooksCount = _context.Book.Count(b => b.OwnerId == user.Id);
 
@@ -55,16 +54,14 @@ namespace LibraryAPI.Controllers
         /// </summary>
         /// <param name="email"></param>
         /// <returns>User</returns>
-        [HttpGet("GetUserByEmail/{email}")]
-        [ActionName("GetUserByEmail")]
+        [HttpGet("ByEmail/{email}")]
+        // [ActionName("GetUserByEmail")]
         public async Task<ActionResult<User>> GetUserByEmail(string email)
         {
             var user = await _context.User.Where(x => x.Email == email).SingleOrDefaultAsync();
 
             if (user == null)
-            {
                 return NotFound();
-            }
 
             user.BooksCount = _context.Book.Count(b => b.OwnerId == user.Id);
 
@@ -78,9 +75,7 @@ namespace LibraryAPI.Controllers
         public async Task<IActionResult> PutUser(string id, User user)
         {
             if (id != user.Id)
-            {
                 return BadRequest();
-            }
 
             _context.Entry(user).State = EntityState.Modified;
 
